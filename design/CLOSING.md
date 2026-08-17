@@ -20,9 +20,29 @@ eight honesty mechanics distilled from the real Shape Up pitches.
 
 ## Artifact examination
 
-(see below — appended when the code examination closes)
+A fresh-context examiner reviewed the implementation against the intention and
+blueprint (having not seen the build), running the suite and demonstrating claims
+with concrete inputs. Findings: 5 MAJOR, 5 MINOR — all ten fixed in one round,
+each with a regression test where testable:
+
+- Structural failures (bad enums, string-typed lists, malformed slugs) now
+  short-circuit the checks and share the parse-retry path instead of crashing the
+  renderer or passing as "char-soup" quotes.
+- Malformed `{ref:}` slugs can no longer leak raw placeholders into a client
+  document while checks report green.
+- Quotes containing speaker labels (or spanning speaker turns) go red.
+- `impact_basis` is required non-empty for every opportunity (stricter than the
+  original number-pattern scan, which missed most realistic formats).
+- Q1–Q4 quarter vocabulary no longer false-positives the bare-code scan.
+- CLI, OpenRouter, and Codex error paths fail with actionable messages instead of
+  tracebacks (`codex login` hint, truncation hints, friendly `check` errors).
+
+Suite at close: 35 tests green. The committed example re-verified green under the
+stricter checks without modification.
 
 ## Spec list at close
 
-See SPECS.md — all specs closed except the final publish step, which was blocked on
-GitHub re-authentication at the time of writing.
+S0–S5 closed; S6 closed except the physical push, which was blocked on GitHub
+re-authentication (`gh` keyring token invalid, no SSH keys) at the time of writing.
+The repo is fully commit-ready: run `gh auth login -h github.com`, then
+`gh repo create 5000Stadia/groundwork --public --source . --push`.
