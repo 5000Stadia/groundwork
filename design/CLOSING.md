@@ -42,7 +42,5 @@ stricter checks without modification.
 
 ## Spec list at close
 
-S0–S5 closed; S6 closed except the physical push, which was blocked on GitHub
-re-authentication (`gh` keyring token invalid, no SSH keys) at the time of writing.
-The repo is fully commit-ready: run `gh auth login -h github.com`, then
-`gh repo create 5000Stadia/groundwork --public --source . --push`.
+All specs closed. Published: https://github.com/5000Stadia/groundwork (public,
+branch main) on 2026-08-17, under stand-by authority granted at the Front Door.

@@ -21,7 +21,7 @@ against the Shape Up anchor passes. Each spec closes in one commit with document
 - [x] **S5 — Provider switch.** `codex_provider.py` + `openrouter_provider.py` (default
   model resolved against the live catalog); `GROUNDWORK_PROVIDER`; graceful errors when
   credentials are missing.
-- [~] **S6 — README, blind comparison, publish.** README quickstart for all three
+- [x] **S6 — README, blind comparison, publish.** README quickstart for all three
   connection paths. Blind comparison: a fresh-context examiner receives the proposal and
   the anchor mechanics (not the build history) and scores each mechanic; result recorded
   in design/CLOSING.md. Create public repo `5000Stadia/groundwork`, push.
