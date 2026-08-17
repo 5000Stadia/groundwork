@@ -64,3 +64,12 @@ def test_unparseable_twice_raises():
 def test_parse_document_rejects_missing_fields():
     with pytest.raises(ParseError):
         parse_document('{"client_name": "x"}')
+
+
+def test_structurally_broken_twice_raises_not_renders():
+    bad = make_proposal()
+    bad.opportunities[0].effort = "XL"
+    provider = FakeProvider(json.dumps(bad.to_dict()), json.dumps(bad.to_dict()))
+    with pytest.raises(ParseError) as exc:
+        generate(TRANSCRIPT, provider=provider)
+    assert "effort" in str(exc.value)

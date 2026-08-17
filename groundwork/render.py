@@ -66,7 +66,7 @@ def render(doc: Proposal) -> str:
         out.append(f"**Where this comes from:** {s(o.moment)}\n")
         for q in o.quotes:
             out.append(f"> “{q}”\n")
-        out.append(f"**Effort:** {_EFFORT_WORDS[o.effort]} · **Confidence:** {o.confidence} — {s(o.confidence_reason)}\n")
+        out.append(f"**Effort:** {_EFFORT_WORDS.get(o.effort, o.effort)} · **Confidence:** {o.confidence} — {s(o.confidence_reason)}\n")
         out.append(f"**What it's worth:** {s(o.impact)}")
         out.append(f"  \n*Basis: {s(o.impact_basis)}*\n")
         out.append(f"**First slice:** {s(o.first_slice)}\n")

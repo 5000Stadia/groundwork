@@ -48,12 +48,29 @@ class Failure:
 # Check 1: every quote appears verbatim in the transcript
 # ---------------------------------------------------------------------------
 
+_SPEAKER_LINE_RE = re.compile(r"^([A-Z][\w .'-]{0,30}):", re.MULTILINE)
+
+
+def transcript_speakers(transcript: str) -> set[str]:
+    """Names appearing as 'Name:' speaker labels at line starts."""
+    return {m.group(1).strip() for m in _SPEAKER_LINE_RE.finditer(transcript)}
+
+
 def check_verbatim(doc: Proposal, transcript: str) -> list[Failure]:
     haystack = fold(transcript)
+    speakers = transcript_speakers(transcript)
     failures = []
     for path, quote in doc.iter_quotes():
         if not quote.strip():
             failures.append(Failure("verbatim", path, "empty quote"))
+            continue
+        hit = next((s for s in speakers if f"{s}:" in quote), None)
+        if hit is not None:
+            failures.append(Failure(
+                "verbatim", path,
+                f"quote contains the speaker label {hit + ':'!r} — a quote must be one "
+                f"contiguous span by one speaker, with no labels inside: {quote!r}",
+            ))
             continue
         if "..." in quote or "…" in quote:
             failures.append(Failure(
@@ -129,9 +146,12 @@ def check_lexicon(doc: Proposal) -> list[Failure]:
 # Check 3: reference integrity + numbers carry a basis
 # ---------------------------------------------------------------------------
 
-_REF_RE = re.compile(r"\{ref:([a-z0-9-]+)\}")
-_BARE_CODE_RE = re.compile(r"\b[ONQ]\d+\b")
-_NUMBER_RE = re.compile(r"[$€£]\s?\d|\d+(?:[.,]\d+)?\s*(?:%|percent|hours?|days?|weeks?|months?|k\b|K\b)")
+_ANY_REF_RE = re.compile(r"\{ref:([^}]*)\}")
+_SLUG_RE = re.compile(r"^[a-z0-9-]+$")
+# O/N codes are always renderer-owned; Q1-Q4 followed by quarter vocabulary is
+# ordinary business speech ("the Q4 rush"), not a display code.
+_BARE_CODE_RE = re.compile(
+    r"\b(?:[ON]\d+|Q(?:[5-9]|\d{2,})|Q[1-4](?!\s+(?:rush|quarter|sales|revenue|earnings|results|numbers|season)))\b")
 
 
 def check_refs(doc: Proposal) -> list[Failure]:
@@ -140,11 +160,18 @@ def check_refs(doc: Proposal) -> list[Failure]:
     # {ref:} to a pain could never render.
     codeable = {x.id for x in (*doc.opportunities, *doc.honest_nos, *doc.open_questions)}
     for path, text in doc.iter_prose():
-        for m in _REF_RE.finditer(text):
-            if m.group(1) not in codeable:
+        for m in _ANY_REF_RE.finditer(text):
+            slug = m.group(1)
+            if not _SLUG_RE.match(slug):
                 failures.append(Failure(
                     "refs", path,
-                    f"{{ref:{m.group(1)}}} does not resolve to a codeable item "
+                    f"malformed reference {m.group(0)!r} — slugs are lowercase letters, "
+                    "digits, and hyphens only",
+                ))
+            elif slug not in codeable:
+                failures.append(Failure(
+                    "refs", path,
+                    f"{{ref:{slug}}} does not resolve to a codeable item "
                     "(an opportunity, honest no, or open question — pains have no codes; "
                     "name the pain in words instead)",
                 ))
@@ -153,23 +180,16 @@ def check_refs(doc: Proposal) -> list[Failure]:
                 "refs", path,
                 "bare code (O1/N2/Q3-style) in authored text — use {ref:<slug>}; codes are assigned by the renderer",
             ))
-    for o in doc.opportunities:
-        if _NUMBER_RE.search(o.impact) and not o.impact_basis.strip():
-            failures.append(Failure(
-                "refs", f"opportunities.{o.id}.impact",
-                "impact states a number but impact_basis is empty — every number needs its stated basis",
-            ))
     return failures
 
 
 # ---------------------------------------------------------------------------
 
 def run_all(doc: Proposal, transcript: str) -> list[Failure]:
-    failures = [Failure("structure", "document", p) for p in doc.validate()]
-    failures += check_verbatim(doc, transcript)
-    failures += check_lexicon(doc)
-    failures += check_refs(doc)
-    return failures
+    structural = [Failure("structure", "document", p) for p in doc.validate()]
+    if structural:
+        return structural
+    return check_verbatim(doc, transcript) + check_lexicon(doc) + check_refs(doc)
 
 
 def report(failures: list[Failure]) -> str:

@@ -17,8 +17,16 @@ def _cmd_check(args: argparse.Namespace) -> int:
     from .checks import report, run_all
     from .schema import Proposal
 
-    doc = Proposal.from_dict(json.loads(Path(args.proposal).read_text(encoding="utf-8")))
-    transcript = Path(args.transcript).read_text(encoding="utf-8")
+    try:
+        data = json.loads(Path(args.proposal).read_text(encoding="utf-8"))
+        doc = Proposal.from_dict(data)
+        transcript = Path(args.transcript).read_text(encoding="utf-8")
+    except OSError as exc:
+        print(f"cannot read input: {exc}", file=sys.stderr)
+        return 2
+    except (json.JSONDecodeError, KeyError, TypeError) as exc:
+        print(f"{args.proposal} is not a valid proposal document: {exc}", file=sys.stderr)
+        return 2
     failures = run_all(doc, transcript)
     print(report(failures))
     return 1 if failures else 0
@@ -29,6 +37,10 @@ def _cmd_generate(args: argparse.Namespace) -> int:
 
     transcript = Path(args.transcript).read_text(encoding="utf-8")
     out_md = Path(args.output)
+    if out_md.suffix == ".json":
+        print("-o must be the markdown path (the .json sidecar is derived from it)",
+              file=sys.stderr)
+        return 2
     out_json = out_md.with_suffix(".json")
 
     result = generate(transcript)

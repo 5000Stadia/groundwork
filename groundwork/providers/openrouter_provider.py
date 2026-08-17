@@ -43,6 +43,12 @@ class OpenRouterProvider:
             raise RuntimeError(f"openrouter HTTP {resp.status_code}: {resp.text[:500]}")
         data = resp.json()
         try:
-            return data["choices"][0]["message"]["content"]
+            choice = data["choices"][0]
+            content = choice["message"]["content"]
         except (KeyError, IndexError) as exc:
             raise RuntimeError(f"openrouter: unexpected response shape: {str(data)[:500]}") from exc
+        if not isinstance(content, str) or not content:
+            raise RuntimeError(f"openrouter: empty/non-text content: {str(data)[:500]}")
+        if choice.get("finish_reason") == "length":
+            raise RuntimeError("openrouter: output truncated at max_tokens — transcript may be too large")
+        return content

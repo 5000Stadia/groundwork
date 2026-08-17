@@ -114,8 +114,16 @@ class CodexProvider:
                             if part.get("type") == "output_text":
                                 out.append(part.get("text", ""))
                 final = "".join(out)
+            elif etype == "response.incomplete":
+                reason = (event.get("response", {}).get("incomplete_details") or {}).get("reason", "unknown")
+                raise RuntimeError(
+                    f"codex backend returned an incomplete response ({reason}) — "
+                    "output was likely truncated; transcript may be too large"
+                )
             elif etype in ("response.failed", "error"):
                 raise RuntimeError(f"codex backend stream error: {json.dumps(event)[:500]}")
         if final is not None and final:
             return final
+        if not chunks:
+            raise RuntimeError("codex backend stream ended with no output text")
         return "".join(chunks)

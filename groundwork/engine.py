@@ -61,6 +61,10 @@ def generate(transcript: str, provider=None) -> Result:
             doc = None
         else:
             failures = run_all(doc, transcript)
+            # A structurally broken document can't be rendered or trusted —
+            # treat it like a parse failure rather than handing it onward.
+            if any(f.check == "structure" for f in failures):
+                doc = None
 
         if not failures:
             break

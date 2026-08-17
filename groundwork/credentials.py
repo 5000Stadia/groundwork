@@ -128,11 +128,20 @@ def refresh_codex_credential(creds: CodexCredential) -> CodexCredential:
             result = json.loads(resp.read())
     except urllib.error.HTTPError as exc:
         if exc.code == 401:
-            # `codex login` rotated the refresh token — recover from the CLI file.
+            # `codex login` rotated the refresh token — recover from the CLI file,
+            # but only if its access token is different and not itself expired.
             cli_creds = _read_cli_auth()
-            if cli_creds is not None and cli_creds["access"] != creds["access"]:
+            if (
+                cli_creds is not None
+                and cli_creds["access"] != creds["access"]
+                and cli_creds["expires"] > time.time() * 1000
+            ):
                 _persist(cli_creds)
                 return cli_creds
+            raise CredentialError(
+                "ChatGPT OAuth refresh was rejected (401) and no fresher login was "
+                "found — run `codex login` and try again."
+            ) from exc
         raise CredentialError(f"Codex token refresh failed: {exc}") from exc
     except urllib.error.URLError as exc:
         raise CredentialError(f"Codex token refresh failed: {exc}") from exc

@@ -92,11 +92,11 @@ def test_bare_code_in_prose_goes_red():
     failures = check_refs(doc)
     assert failures and "bare code" in failures[0].detail
 
-def test_number_without_basis_goes_red():
+def test_empty_impact_basis_goes_red():
     doc = make_proposal()
     doc.opportunities[0].impact = "Save $4,000 a month."
     doc.opportunities[0].impact_basis = "  "
-    failures = check_refs(doc)
+    failures = run_all(doc, TRANSCRIPT)
     assert failures and "basis" in failures[0].detail
 
 
@@ -111,3 +111,42 @@ def test_ref_to_pain_goes_red():
     doc.page_one = "The core problem is {ref:pain-retyping}."
     failures = check_refs(doc)
     assert failures and "pains have no codes" in failures[0].detail
+
+
+# --- review-round regressions ----------------------------------------------
+
+def test_quotes_as_string_is_structural_red_not_char_soup():
+    doc = make_proposal()
+    doc.pains[0].quotes = "We lose orders"  # LLM slip: string, not list
+    failures = run_all(doc, TRANSCRIPT)
+    assert failures and all(f.check == "structure" for f in failures)
+    assert any("list of strings" in f.detail for f in failures)
+
+
+def test_bad_slug_id_is_structural_red():
+    doc = make_proposal()
+    doc.opportunities[0].id = "Opp_Invoicing"
+    failures = run_all(doc, TRANSCRIPT)
+    assert any("not a valid slug" in f.detail for f in failures)
+
+
+def test_malformed_ref_goes_red_instead_of_leaking():
+    doc = make_proposal()
+    doc.page_one = "Start with {ref:Opp_Invoicing}."
+    failures = check_refs(doc)
+    assert failures and "malformed reference" in failures[0].detail
+
+
+def test_quote_spanning_speaker_turns_goes_red():
+    doc = make_proposal()
+    doc.pains[0].quotes = ["walk me through a typical week. Sam: Honestly?"]
+    failures = check_verbatim(doc, TRANSCRIPT)
+    assert failures and "speaker label" in failures[0].detail
+
+
+def test_quarter_talk_is_not_a_bare_code():
+    doc = make_proposal()
+    doc.pains[0].why_it_hurts = "The Q4 rush buries the office every year."
+    assert check_refs(doc) == []
+    doc.pains[0].why_it_hurts = "See Q4 for details."
+    assert check_refs(doc)  # a real dangling display code still reds

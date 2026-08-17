@@ -39,3 +39,9 @@ def test_roundtrip_through_json():
     doc = make_proposal()
     again = Proposal.from_dict(json.loads(json.dumps(doc.to_dict())))
     assert render(again) == render(doc)
+
+
+def test_render_survives_unknown_effort():
+    doc = make_proposal()
+    doc.opportunities[0].effort = "XL"
+    assert "XL" in render(doc)  # no KeyError; engine blocks this upstream anyway

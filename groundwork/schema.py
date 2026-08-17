@@ -89,18 +89,48 @@ class Proposal:
         return asdict(self)
 
     def validate(self) -> list[str]:
-        """Structural problems (not check failures): bad enums, duplicate ids."""
+        """Structural problems (not check failures): bad enums, ids, field types."""
+        import re
+
         problems = []
-        ids = [x.id for x in (*self.pains, *self.opportunities, *self.honest_nos, *self.open_questions)]
+        items = (*self.pains, *self.opportunities, *self.honest_nos, *self.open_questions)
+        ids = [x.id for x in items]
         dupes = {i for i in ids if ids.count(i) > 1}
         if dupes:
             problems.append(f"duplicate ids: {sorted(dupes)}")
+        slug = re.compile(r"^[a-z0-9-]+$")
+        for x in items:
+            if not isinstance(x.id, str) or not slug.match(x.id):
+                problems.append(
+                    f"id {x.id!r} is not a valid slug (lowercase letters, digits, hyphens only)")
         for o in self.opportunities:
             if o.effort not in EFFORTS:
                 problems.append(f"{o.id}: effort must be one of {EFFORTS}, got {o.effort!r}")
             if o.confidence not in CONFIDENCES:
                 problems.append(f"{o.id}: confidence must be one of {CONFIDENCES}, got {o.confidence!r}")
+            if not str(o.impact_basis).strip():
+                problems.append(f"{o.id}: impact_basis is empty — every impact needs its stated basis")
+        for path, quotes in self._quote_lists():
+            if not isinstance(quotes, list) or not all(isinstance(q, str) for q in quotes):
+                problems.append(f"{path}: quotes must be a list of strings")
+        if not isinstance(self.recommended_path.then_layers, list) or not all(
+            isinstance(s, str) for s in self.recommended_path.then_layers
+        ):
+            problems.append("recommended_path.then_layers must be a list of strings")
+        for path, text in self.iter_prose():
+            if not isinstance(text, str):
+                problems.append(f"{path}: must be a string, got {type(text).__name__}")
         return problems
+
+    def _quote_lists(self):
+        for p in self.pains:
+            yield f"pains.{p.id}.quotes", p.quotes
+        for o in self.opportunities:
+            yield f"opportunities.{o.id}.quotes", o.quotes
+        for n in self.honest_nos:
+            yield f"honest_nos.{n.id}.quotes", n.quotes
+        for q in self.open_questions:
+            yield f"open_questions.{q.id}.quotes", q.quotes
 
     # -- traversal (what the checks walk) ----------------------------------
 
