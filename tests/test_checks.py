@@ -104,3 +104,10 @@ def test_number_without_basis_goes_red():
 
 def test_fixture_is_fully_green():
     assert run_all(make_proposal(), TRANSCRIPT) == []
+
+
+def test_ref_to_pain_goes_red():
+    doc = make_proposal()
+    doc.page_one = "The core problem is {ref:pain-retyping}."
+    failures = check_refs(doc)
+    assert failures and "pains have no codes" in failures[0].detail

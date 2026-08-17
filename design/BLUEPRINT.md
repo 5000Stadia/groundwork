@@ -72,5 +72,5 @@ design/               # the AgentBridge documents
   (No tools are sent, so Kernos's ~40KB tool-schema failure mode doesn't apply; the
   load-bearing headers are kept anyway.)
 - **openrouter**: `OPENROUTER_API_KEY`, POST `https://openrouter.ai/api/v1/chat/completions`.
-  Default model resolved in S5 against OpenRouter's live catalog to the same tier the
-  Anthropic provider uses; override `GROUNDWORK_OPENROUTER_MODEL`.
+  Default model `anthropic/claude-opus-5` (verified in the live catalog; same tier as
+  the Anthropic provider); override `GROUNDWORK_OPENROUTER_MODEL`.

@@ -41,7 +41,9 @@ HARD RULES (mechanically checked — the document is rejected if these fail)
    Keep quotes short — a sentence or two. If a claim needs two moments, cite two quotes.
 2. NO DISPLAY CODES. Never write O1, N2, Q3 in any text field — codes are assigned later.
    To cross-reference an item, write {ref:<its-id>} — e.g. "start with {ref:opp-invoicing}
-   before touching {ref:no-full-erp}". Every {ref:} must point at an id that exists.
+   before touching {ref:no-full-erp}". A {ref:} may only point at an opportunity, an
+   honest no, or an open question (they get codes). Pains have no codes — refer to a
+   pain in plain words, never with {ref:}.
 3. IDS ARE SLUGS you choose: lowercase, hyphens; prefix opportunities with "opp-",
    no's with "no-", questions with "q-", pains with "pain-".
 4. Any impact that states a number must have a non-empty impact_basis.

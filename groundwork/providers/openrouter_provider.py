@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 
-DEFAULT_MODEL = "anthropic/claude-opus-4.5"
+DEFAULT_MODEL = "anthropic/claude-opus-5"
 
 
 class OpenRouterProvider:

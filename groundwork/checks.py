@@ -136,12 +136,17 @@ _NUMBER_RE = re.compile(r"[$€£]\s?\d|\d+(?:[.,]\d+)?\s*(?:%|percent|hours?|da
 
 def check_refs(doc: Proposal) -> list[Failure]:
     failures = []
-    known = doc.all_ids()
+    # Only coded items are referenceable: pains carry no display code, so a
+    # {ref:} to a pain could never render.
+    codeable = {x.id for x in (*doc.opportunities, *doc.honest_nos, *doc.open_questions)}
     for path, text in doc.iter_prose():
         for m in _REF_RE.finditer(text):
-            if m.group(1) not in known:
+            if m.group(1) not in codeable:
                 failures.append(Failure(
-                    "refs", path, f"{{ref:{m.group(1)}}} does not resolve to any item id",
+                    "refs", path,
+                    f"{{ref:{m.group(1)}}} does not resolve to a codeable item "
+                    "(an opportunity, honest no, or open question — pains have no codes; "
+                    "name the pain in words instead)",
                 ))
         if _BARE_CODE_RE.search(text):
             failures.append(Failure(
