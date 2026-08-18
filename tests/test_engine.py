@@ -73,3 +73,28 @@ def test_structurally_broken_twice_raises_not_renders():
     with pytest.raises(ParseError) as exc:
         generate(TRANSCRIPT, provider=provider)
     assert "effort" in str(exc.value)
+
+
+# --- S7: --client steer ------------------------------------------------------
+
+def test_client_steer_replaces_operator_sentence():
+    from groundwork.prompt import user_prompt
+
+    default = user_prompt(TRANSCRIPT)
+    steered = user_prompt(TRANSCRIPT, "Lewis Cabinet Company")
+    assert "operator being interviewed" in default
+    assert "operator being interviewed" not in steered
+    assert "Lewis Cabinet Company" in steered
+    assert "never borrow their moments" in steered
+
+
+def test_client_steer_survives_the_corrective_retry():
+    bad = make_proposal()
+    bad.page_one = "We will streamline everything."  # planted lexicon red
+    provider = FakeProvider(json.dumps(bad.to_dict()), good_json())
+    result = generate(TRANSCRIPT, provider=provider, client="Lewis Cabinet Company")
+    assert result.failures == []
+    assert len(provider.calls) == 2
+    for _, user in provider.calls:  # steer present on BOTH attempts
+        assert "Lewis Cabinet Company" in user
+        assert "operator being interviewed" not in user

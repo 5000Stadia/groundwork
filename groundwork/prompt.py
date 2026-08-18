@@ -89,10 +89,23 @@ Return ONLY a JSON object, no markdown fences, no commentary, with exactly this 
 """
 
 
-def user_prompt(transcript: str) -> str:
+def user_prompt(transcript: str, client: str | None = None) -> str:
+    if client is None:
+        steer = (
+            "Treat the operator being interviewed as the client; propose for their "
+            "business as described."
+        )
+    else:
+        steer = (
+            f"The intended client is: {client}. Propose only for that business as it is "
+            "actually described in this transcript — draw every pain, opportunity, and "
+            "quote solely from moments about it. Other ventures in the conversation may "
+            "appear only as context or in the honest no's; never borrow their moments as "
+            "this client's. Take client_name from how the transcript names the business, "
+            "not from the wording of this instruction."
+        )
     return (
-        "Here is the discovery conversation transcript. Treat the operator being "
-        "interviewed as the client; propose for their business as described.\n\n"
+        "Here is the discovery conversation transcript. " + steer + "\n\n"
         "<transcript>\n" + transcript + "\n</transcript>"
     )
 

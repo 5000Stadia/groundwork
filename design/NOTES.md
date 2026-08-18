@@ -25,6 +25,22 @@ not substitute (pains carry no codes). Fixed: refs may only target coded items; 
 check now rejects pain refs and the prompt says so. The committed example is the
 regenerated, fully-green document.
 
+## S7 finding — the voice-integrity limit of steered runs (2026-08-17)
+
+`--client` works as designed: on the same transcript, steering to the cabinet shop
+produced cabinet-shop pains, took `client_name` from the transcript (not the flag
+string), and confined the SaaS to the honest no's. Checks green, blind comparison
+MEETS ANCHOR (7/8 PASS, 1 PARTIAL). But the blind examiner surfaced a real limit:
+when the transcript narrates the target business in third person and past tense,
+verbatim quoting faithfully reproduces that voice — "In your words" then quotes
+retrospection about the business, not the owner speaking as the owner. No check can
+fix this (the quotes ARE verbatim); it is a property of the input. Practical
+guidance for users: `--client` shines when the conversation genuinely covers
+multiple current ventures; for purely retrospective material, expect the What We
+Heard section to read as witnessed history. Two garbled-speech quotes ("blah,
+blah, blah") also passed verbatim — faithful, but a consultant would trim them;
+possibly a future prompt nudge, deliberately not a check.
+
 ## Provider status
 
 - **openai-codex**: exercised live end-to-end (this run), including credential resync

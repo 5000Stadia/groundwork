@@ -43,7 +43,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         return 2
     out_json = out_md.with_suffix(".json")
 
-    result = generate(transcript)
+    result = generate(transcript, client=args.client)
     out_json.write_text(
         json.dumps(result.document.to_dict(), indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
@@ -67,6 +67,11 @@ def main(argv: list[str] | None = None) -> int:
     g = sub.add_parser("generate", help="transcript -> proposal.md + proposal.json")
     g.add_argument("transcript")
     g.add_argument("-o", "--output", default="proposal.md")
+    g.add_argument(
+        "--client",
+        default=None,
+        help="the business the proposal is for, when the conversation covers more than one",
+    )
     g.set_defaults(func=_cmd_generate)
 
     c = sub.add_parser("check", help="re-run the mechanical checks on a proposal")

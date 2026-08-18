@@ -55,6 +55,19 @@ and $40k bad-debt hits. Run `examples/fetch_transcript.sh` to pull the transcrip
 groundwork generate examples/transcript.txt -o examples/proposal.md
 ```
 
+The same conversation covers two businesses — Brady's SaaS (Allmoxy) and the family
+cabinet shop it grew out of. When a transcript is ambiguous like that, `--client`
+names the intended client:
+
+```
+groundwork generate examples/transcript.txt -o examples/proposal-lewis-cabinet.md \
+  --client "Lewis Cabinet Company, the family cabinet shop"
+```
+
+[`examples/proposal-lewis-cabinet.md`](examples/proposal-lewis-cabinet.md) is that
+second run: same transcript, different client, a different — and differently
+honest — document.
+
 ## Install
 
 ```

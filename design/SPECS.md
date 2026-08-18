@@ -25,3 +25,17 @@ against the Shape Up anchor passes. Each spec closes in one commit with document
   connection paths. Blind comparison: a fresh-context examiner receives the proposal and
   the anchor mechanics (not the build history) and scores each mechanic; result recorded
   in design/CLOSING.md. Create public repo `5000Stadia/groundwork`, push.
+- [x] **S7 — `--client` flag.** `groundwork generate transcript.txt --client "..."` names
+  the intended client, removing the ambiguity found in S4. Plan (as reviewed):
+  `prompt.user_prompt(transcript, client=None)` — when client is given, the default
+  "treat the operator as the client" sentence is REPLACED (not appended to) by a steer
+  that draws every pain, opportunity, and quote solely from moments about that client,
+  allows other ventures only as context or honest no's, and takes `client_name` from the
+  transcript rather than the flag string. `engine.generate` threads `client` through both
+  the first attempt AND the corrective retry (pinned by a test where attempt 1 fails and
+  the second captured input still carries the steer). Checks, renderer, schema, and
+  `groundwork check` stay client-agnostic — no mismatch check, no schema field.
+  Proof: second real run on the same transcript targeting the cabinet-shop era,
+  committed as `examples/proposal-lewis-cabinet.*` (checks green), blind-compared
+  against the anchor like the first example (score appended to CLOSING.md), README
+  updated with the two-clients-one-transcript contrast.

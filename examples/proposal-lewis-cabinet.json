@@ -1,0 +1,167 @@
+{
+  "client_name": "Lewis Cabinet",
+  "business": "An outsource manufacturer that produces cabinet parts and doors for cabinet shops.",
+  "page_one": "Lewis Cabinet’s biggest cost was delayed cash, followed closely by office work that consumed whole days. Orders shipped before invoices went out; overdue accounts surfaced only when wood bills were already due. Brady’s summary was blunt: “the cash flow was just a nightmare for him.” Meanwhile, faxed orders had to be typed into Excel, and calculating door parts became a full-time job.\n\nThe existing workarounds did work. The spreadsheet calculated parts, the neighbor could change formulas, and customers knew how to fax. The cost was the owner’s time, late collections, inventory guesswork, and dependence on whoever understood the file.\n\nStart with {ref:opp-faster-invoicing}: issue invoices when work ships, include a payment link, and surface overdue accounts immediately. Then prove {ref:opp-order-intake} on one common product family before adding inventory purchasing and editable production rules.\n\nWe would not begin by turning this into software for every manufacturer; {ref:no-general-platform} shows how expensive that detour became. We also would not repeat the cold-turkey fax shutdown in {ref:no-forced-cutover}. It ultimately worked, but it put the family’s livelihood at risk when a controlled customer pilot could prove the same point.",
+  "pains": [
+    {
+      "id": "pain-cash-flow",
+      "headline": "Cabinet shops received finished work long before Lewis Cabinet knew whether it would be paid",
+      "quotes": [
+        "He’d send them out and a month later, he’d get around to invoicing them. And then two months after that, he’d realize, “Oh my gosh, these are past due and I have wood bills due.”",
+        "We’d get taken for $40,000 here, $20,000 there."
+      ],
+      "why_it_hurts": "Lewis Cabinet financed customers while carrying its own wood bills. The informal credit process preserved customer relationships, but it also let unpaid balances become serious losses before anyone acted."
+    },
+    {
+      "id": "pain-order-reentry",
+      "headline": "Fax-to-Excel order entry consumed the owner’s working day",
+      "quotes": [
+        "He’d get a fax in. He’d pick it up and he’d type it into an Excel.",
+        "And it took forever. It was a full-time job for him. So, he was spending eight hours a day doing that."
+      ],
+      "why_it_hurts": "The spreadsheet was useful: it translated an order into required door parts. The cost was retyping every fax and keeping the owner occupied with calculations instead of production, customers, and cash."
+    },
+    {
+      "id": "pain-inventory-guesswork",
+      "headline": "Every order created a fresh wood-counting and purchasing exercise",
+      "quotes": [
+        "So, it was then my job to go around and figure out how much wood we needed for that order that came in and how much do we have.",
+        "We had no real system to do that."
+      ],
+      "why_it_hurts": "Someone had to compare each order with material on hand, account for waste, and prepare purchasing information. That manual check worked through employee knowledge, but it added office work and made timely buying depend on one person remembering every step."
+    },
+    {
+      "id": "pain-hard-coded-changes",
+      "headline": "Routine product changes required outside technical help",
+      "quotes": [
+        "It was all hard-coded. We had to call the developer and say, “Here’s what we want to do.”",
+        "If you wanted a change, you had to call your neighbor and have him come over and work on it."
+      ],
+      "why_it_hurts": "Both the spreadsheet and first website could run the shop, but Lewis Cabinet could not safely change products, cut rules, or outputs itself. Every exception introduced waiting, explanation, and the risk that the person who understood the logic was unavailable."
+    }
+  ],
+  "opportunities": [
+    {
+      "id": "opp-faster-invoicing",
+      "title": "Invoice at shipment and make payment one click away",
+      "moment": "Brady described orders going out, invoices waiting until the following month, and overdue accounts remaining unnoticed until wood bills were due.",
+      "quotes": [
+        "It was all checks. It was all cash. It was all send an invoice in the mail and then send it back with a check.",
+        "People just like getting an email that says, “You owe this much. Click here to pay it.” They click. They pay. Done."
+      ],
+      "effort": "S",
+      "impact": "Target the one-month delay before invoicing and prevent overdue accounts from sitting unnoticed for another two months. Earlier collection would reduce exposure to losses like the $40,000 and $20,000 accounts Brady recalled.",
+      "impact_basis": "Brady said invoicing occurred a month after shipment, overdue balances were noticed two months later, and Lewis Cabinet had been taken for $40,000 and $20,000. The target assumes an invoice can be created from shipment information on the day work leaves.",
+      "confidence": "high",
+      "confidence_reason": "The delay and losses were explicit, and Lewis Cabinet later found that customers valued emailed payment links and card convenience.",
+      "first_slice": "For one customer group, create invoices on the day of shipment, email a payment link automatically, and place unpaid invoices on a simple aging list reviewed each morning."
+    },
+    {
+      "id": "opp-order-intake",
+      "title": "Let standard orders create their own production parts",
+      "moment": "The first internal ordering website replaced fax re-entry and generated the parts needed to make the customer’s order.",
+      "quotes": [
+        "At that moment when I turned around in my chair and I’m like, “I’m not inputting orders anymore. I have a full day.”",
+        "So, even though it wasn’t a drastic difference, just having all the data go directly into what–actually, sorry, I don’t mean to seem so clueless, but I don’t understand."
+      ],
+      "effort": "M",
+      "impact": "Return up to eight hours per working day previously spent entering orders and calculating parts, while reducing mistakes caused by copying fax details into Excel.",
+      "impact_basis": "Brady said the manual process was a full-time job and consumed eight hours a day. The time impact assumes the pilot covers the standard orders responsible for most re-entry; exception orders would still receive manual review.",
+      "confidence": "high",
+      "confidence_reason": "Lewis Cabinet actually made this change, and Brady reported that he was no longer inputting orders and had his day back.",
+      "first_slice": "Put one common door family into a customer order form that calculates price and required parts. Run the results beside the existing spreadsheet until both outputs agree, then invite a small group of repeat customers."
+    },
+    {
+      "id": "opp-material-purchasing",
+      "title": "Turn accepted orders into material requirements and draft purchase orders",
+      "moment": "Once order calculations were available, Brady recognized that the same information could calculate required wood, waste, stock needs, and purchasing.",
+      "quotes": [
+        "We got the order coming in. We’re doing calculations already, figure how much wood we need, figure out the waste yields and spit out the PO.",
+        "So, we built that and again, turn around and we’re losing office employees."
+      ],
+      "effort": "M",
+      "impact": "Remove recurring wood calculations and purchase-order preparation from the office queue, while giving the shop an earlier warning when accepted work exceeds available material.",
+      "impact_basis": "Brady identified material calculation and purchasing as the next manual job removed after order intake. He did not isolate the hours saved by this feature, so no separate labor figure is assumed.",
+      "confidence": "high",
+      "confidence_reason": "The required quantities already come from order calculations, and Lewis Cabinet successfully used those calculations to produce purchase orders.",
+      "first_slice": "For the product family proven in {ref:opp-order-intake}, calculate required wood and expected waste, compare that requirement with a manually verified stock count, and produce a draft purchase order for human approval."
+    },
+    {
+      "id": "opp-editable-rules",
+      "title": "Let the shop change products and cut rules without calling a developer",
+      "moment": "The first website worked, but every product or output change was hard-coded and had to be sent back to the developer.",
+      "quotes": [
+        "Your dad could not have any easy way to add a new kind of cabinet if he wanted to make it.",
+        "It was all hard-coded. We had to call the developer and say, “Here’s what we want to do.”"
+      ],
+      "effort": "M",
+      "impact": "Reduce waiting and developer calls when Lewis Cabinet adds a product, changes a dimension, or adjusts a cut rule.",
+      "impact_basis": "The transcript confirms that changes required the developer, but it does not state how often changes occurred or how long they waited. The claim is therefore limited to removing that dependency.",
+      "confidence": "medium",
+      "confidence_reason": "The dependency is clear, but the frequency and operational cost of product-rule changes were not quantified.",
+      "first_slice": "Make the dimensions, part names, and cut formula for the first supported door family editable in an owner-only screen, with a preview and rollback before any change reaches production."
+    }
+  ],
+  "honest_nos": [
+    {
+      "id": "no-general-platform",
+      "title": "Do not begin by rewriting Lewis Cabinet’s tools for every manufacturer",
+      "what_they_raised": "Brady saw demand from competitors and wanted to replace the shop-specific system with an open platform that could be sold to everyone doing similar work.",
+      "quotes": [
+        "Oh, we should rewrite this and sell it to everyone that does this type of a business.",
+        "He would have shut me down instantly if he knew that seven years later we’ve put $1.5 million into this."
+      ],
+      "why_not": "The outside demand was real: a competitor offered to buy the system, and the broader software eventually became a business. But that does not make a generalized platform the right first investment for Lewis Cabinet. Supporting different catalogues, variables, supplies, and production rules turned a shop tool into a seven-year undertaking. First finish {ref:opp-faster-invoicing} and {ref:opp-order-intake} around Lewis Cabinet’s own work. Reconsider outside sales only after the shop can change its rules without developer help and onboarding another company no longer interrupts cabinet operations."
+    },
+    {
+      "id": "no-forced-cutover",
+      "title": "Do not shut off fax ordering before a controlled customer pilot",
+      "what_they_raised": "Brady forced every customer onto the new website by refusing to accept any more faxes.",
+      "quotes": [
+        "We were not going to accept any faxes ever again.",
+        "We lost one customer for only a couple of weeks.",
+        "He came back a couple of weeks later and he’s still one of our best customers today."
+      ],
+      "why_not": "The evidence cuts both ways: the hard cutoff worked, the lost customer returned, and customers eventually accepted the website. It also triggered furious arguments and put a major customer relationship against an unproven system. Lewis Cabinet does need a deadline, because Brady was right that customers prefer the old method. But first prove the form with repeat customers, compare its production output with the spreadsheet, and give the office a clear exception process. Then retire fax on a published date rather than gambling the family’s livelihood on launch day."
+    }
+  ],
+  "recommended_path": {
+    "first_move": "Prove {ref:opp-faster-invoicing} within weeks: use shipment information to issue same-day invoices, add a payment link, and review one aging list daily for a selected customer group.",
+    "then_layers": [
+      "Build the one-product-family pilot in {ref:opp-order-intake}, keeping the spreadsheet as a parallel check until the calculated parts consistently match.",
+      "Move a small group of repeat customers onto the order form, answer {ref:q-order-exceptions}, and set a gradual fax retirement plan rather than using {ref:no-forced-cutover}.",
+      "Add {ref:opp-material-purchasing} only for the orders already proven through the new intake path.",
+      "Add {ref:opp-editable-rules} so Lewis Cabinet can maintain that first product family without developer intervention.",
+      "After the shop’s own process is stable, revisit outside demand—but do not commit to {ref:no-general-platform} unless another company can be set up without custom development."
+    ]
+  },
+  "open_questions": [
+    {
+      "id": "q-credit-policy",
+      "question": "Which customers should pay at order, which should pay at shipment, and which genuinely require credit terms?",
+      "assumption": "Most new or higher-risk customers can pay by card at order or shipment, while a short list of proven cabinet shops keeps approved terms. This should be tested rather than forcing every customer into the same policy.",
+      "quotes": [
+        "They didn’t mind paying 3.5 percent to be able to accept payment immediately on a credit card.",
+        "I watched my dad’s company go from accepting credit cards for maybe 20 percent of its payments to now to about 70 or 80 percent."
+      ]
+    },
+    {
+      "id": "q-order-exceptions",
+      "question": "What share of incoming orders follows standard product rules, and which modifications still require an employee to interpret the request?",
+      "assumption": "A common door family supplies enough repeat volume to prove the new intake path, while special modifications remain in a manual exception queue during the first slice.",
+      "quotes": [
+        "If there were any special modifications that had to happen, that was broken, blah, blah, blah.",
+        "It captured the order. It was all hard-coded, though."
+      ]
+    },
+    {
+      "id": "q-inventory-record",
+      "question": "Is the current stock count dependable enough to drive purchasing, or must material receiving and usage be recorded first?",
+      "assumption": "The shop knows its material formulas and waste yields, but the on-hand quantity needs a manual baseline count before purchase orders can be trusted.",
+      "quotes": [
+        "So, it was then my job to go around and figure out how much wood we needed for that order that came in and how much do we have.",
+        "We got the order coming in. We’re doing calculations already, figure how much wood we need, figure out the waste yields and spit out the PO."
+      ]
+    }
+  ]
+}

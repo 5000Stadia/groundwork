@@ -18,6 +18,16 @@ eight honesty mechanics distilled from the real Shape Up pitches.
 - Only cosmetic shortfall noted: no literal timestamps on quotes (the transcript
   itself carries none).
 
+## Blind comparison — second example (S7, 2026-08-17)
+
+Same procedure, fresh examiner, for `examples/proposal-lewis-cabinet.md` (the
+`--client`-steered run): **MEETS ANCHOR — 7 PASS, 1 PARTIAL** (mechanic 8: the
+parallel-run safety net is built into the first slices but never spoken as a
+client-facing promise). Residual finding worth keeping: steering to a business
+the speaker narrates retrospectively means the "In your words" quotes are
+third-person ("He'd send them out..."), which an attentive owner would notice —
+a property of retrospective transcripts, recorded in NOTES.md, not a check gap.
+
 ## Artifact examination
 
 A fresh-context examiner reviewed the implementation against the intention and

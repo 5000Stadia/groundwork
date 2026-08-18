@@ -42,13 +42,13 @@ def parse_document(text: str) -> Proposal:
         raise ParseError(f"JSON does not match the document contract: {exc}") from exc
 
 
-def generate(transcript: str, provider=None) -> Result:
+def generate(transcript: str, provider=None, client: str | None = None) -> Result:
     if provider is None:
         from .providers import resolve_provider
 
         provider = resolve_provider()
 
-    attempt_input = user_prompt(transcript)
+    attempt_input = user_prompt(transcript, client)
     doc: Proposal | None = None
     failures: list[Failure] = []
 
@@ -72,7 +72,7 @@ def generate(transcript: str, provider=None) -> Result:
             # One corrective pass, carrying the specific failures. The retry sees
             # the transcript again plus its own previous output.
             attempt_input = (
-                user_prompt(transcript)
+                user_prompt(transcript, client)
                 + "\n\nYour previous attempt:\n" + raw
                 + "\n\n" + retry_prompt(report(failures))
             )
